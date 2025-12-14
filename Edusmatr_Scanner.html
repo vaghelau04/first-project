@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSmart Scanner - Advanced Educational Q&A App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #06d6a0;
+            --info: #4cc9f0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #eef1ff 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        
+        .main-container {
+            min-height: calc(100vh - 180px);
+        }
+        
+        .step-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+        
+        .card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card.active {
+            border: 3px solid var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .subject-card {
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .subject-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .std-1 { border-top: 5px solid #ff9e00; }
+        .std-2 { border-top: 5px solid #ff6b6b; }
+        .std-3 { border-top: 5px solid #48cae4; }
+        .std-4 { border-top: 5px solid #52b788; }
+        .std-5 { border-top: 5px solid #ff6b6b; }
+        .std-6 { border-top: 5px solid #7209b7; }
+        .std-7 { border-top: 5px solid #3a86ff; }
+        .std-8 { border-top: 5px solid #fb5607; }
+        .std-9 { border-top: 5px solid #8338ec; }
+        .std-10 { border-top: 5px solid #ff006e; }
+        .std-11 { border-top: 5px solid #06d6a0; }
+        .std-12 { border-top: 5px solid #118ab2; }
+        .ba { border-top: 5px solid #f72585; }
+        .bcom { border-top: 5px solid #ff9e00; }
+        .mcom { border-top: 5px solid #06d6a0; }
+        
+        .scanner-section {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .scanner-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .scanner-animation {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .scanner-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, #00e5ff, transparent);
+            top: 30%;
+            animation: scan 2s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 10%; }
+            50% { top: 90%; }
+            100% { top: 10%; }
+        }
+        
+        .question-box {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+        
+        .answer-box {
+            background: #e8f5e9;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 6px solid #06d6a0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-scan {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        
+        .btn-scan:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        .history-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.2s;
+        }
+        
+        .history-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress-container {
+            margin: 30px 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 25px 0;
+            margin-top: 50px;
+        }
+        
+        .subject-badge {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .camera-icon {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .step-container {
+                padding: 20px;
+            }
+            
+            .scanner-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-graduation-cap me-2"></i>EduSmart Scanner
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#history"><i class="fas fa-history me-1"></i> History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#help"><i class="fas fa-question-circle me-1"></i> Help</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container main-container py-4">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="d-flex justify-content-between mb-2">
+                <span>Step 1: Select Standard</span>
+                <span>Step 2: Choose Subject</span>
+                <span>Step 3: Scan Question</span>
+                <span>Step 4: Get Answer</span>
+            </div>
+            <div class="progress" style="height: 8px;">
+                <div class="progress-bar" id="progressBar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+        
+        <!-- Step 1: Select Standard -->
+        <div class="step-container" id="step1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div>
+                    <h3 class="mb-1">Select Your Standard</h3>
+                    <p class="text-muted mb-0">Choose your class or college level</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- School Standards -->
+                <div class="col-md-6 mb-4">
+                    <h5 class="mb-3"><i class="fas fa-school me-2"></i>School Standards</h5>
+                    <div class="row g-3">
+                        <?php 
+                        // PHP can be used to dynamically generate content
+                        // Here we're simulating with static HTML
+                        ?>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-1 p-3 text-center" data-level="std-1">
+                                <h4 class="mb-0">Std 1</h4>
+                                <small class="text-muted">Primary</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-2 p-3 text-center" data-level="std-2">
+                                <h4 class="mb-0">Std 2</h4>
+                                <small class="text-muted">Primary</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-3 p-3 text-center" data-level="std-3">
+                                <h4 class="mb-0">Std 3</h4>
+                                <small class="text-muted">Primary</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-4 p-3 text-center" data-level="std-4">
+                                <h4 class="mb-0">Std 4</h4>
+                                <small class="text-muted">Primary</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-5 p-3 text-center" data-level="std-5">
+                                <h4 class="mb-0">Std 5</h4>
+                                <small class="text-muted">Primary</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-6 p-3 text-center" data-level="std-6">
+                                <h4 class="mb-0">Std 6</h4>
+                                <small class="text-muted">Middle</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-7 p-3 text-center" data-level="std-7">
+                                <h4 class="mb-0">Std 7</h4>
+                                <small class="text-muted">Middle</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-8 p-3 text-center" data-level="std-8">
+                                <h4 class="mb-0">Std 8</h4>
+                                <small class="text-muted">Middle</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-9 p-3 text-center" data-level="std-9">
+                                <h4 class="mb-0">Std 9</h4>
+                                <small class="text-muted">Secondary</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-10 p-3 text-center" data-level="std-10">
+                                <h4 class="mb-0">Std 10</h4>
+                                <small class="text-muted">Secondary</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-11 p-3 text-center" data-level="std-11">
+                                <h4 class="mb-0">Std 11</h4>
+                                <small class="text-muted">Higher Sec</small>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-3">
+                            <div class="card std-12 p-3 text-center" data-level="std-12">
+                                <h4 class="mb-0">Std 12</h4>
+                                <small class="text-muted">Higher Sec</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- College Standards -->
+                <div class="col-md-6">
+                    <h5 class="mb-3"><i class="fas fa-university me-2"></i>College Level</h5>
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <div class="card ba p-4 text-center" data-level="ba">
+                                <h4 class="mb-2">BA</h4>
+                                <small class="text-muted">Bachelor of Arts</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card bcom p-4 text-center" data-level="bcom">
+                                <h4 class="mb-2">BCOM</h4>
+                                <small class="text-muted">Bachelor of Commerce</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card mcom p-4 text-center" data-level="mcom">
+                                <h4 class="mb-2">MCOM</h4>
+                                <small class="text-muted">Master of Commerce</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Selected Standard Info -->
+                    <div class="mt-4 p-3 bg-light rounded" id="selectedStandardInfo" style="display: none;">
+                        <h6><i class="fas fa-info-circle me-2"></i>Selected: <span id="selectedStandardText"></span></h6>
+                        <button class="btn btn-sm btn-primary mt-2" id="nextToSubjects">Next: Choose Subject <i class="fas fa-arrow-right ms-1"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 2: Select Subject (Hidden Initially) -->
+        <div class="step-container" id="step2" style="display: none;">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div>
+                    <h3 class="mb-1">Choose Your Subject</h3>
+                    <p class="text-muted mb-0">Select the subject for your question</p>
+                </div>
+                <button class="btn btn-sm btn-outline-secondary ms-auto" id="backToStandards">
+                    <i class="fas fa-arrow-left me-1"></i> Back
+                </button>
+            </div>
+            
+            <div class="row" id="subjectsContainer">
+                <!-- Subjects will be loaded here dynamically -->
+            </div>
+            
+            <!-- Selected Subject Info -->
+            <div class="mt-4 p-3 bg-light rounded" id="selectedSubjectInfo" style="display: none;">
+                <h6><i class="fas fa-info-circle me-2"></i>Selected: <span id="selectedSubjectText"></span></h6>
+                <button class="btn btn-sm btn-primary mt-2" id="nextToScanner">Next: Scan Question <i class="fas fa-arrow-right ms-1"></i></button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Scan Question (Hidden Initially) -->
+        <div class="scanner-section" id="step3" style="display: none;">
+            <div class="step-header text-white">
+                <div class="step-number">3</div>
+                <div>
+                    <h3 class="mb-1 text-white">Scan Your Question</h3>
+                    <p class="mb-0">Use the scanner or type your question manually</p>
+                </div>
+                <button class="btn btn-sm btn-outline-light ms-auto" id="backToSubjects">
+                    <i class="fas fa-arrow-left me-1"></i> Back
+                </button>
+            </div>
+            
+            <!-- Scanner Simulation -->
+            <div class="scanner-box">
+                <div class="scanner-animation" id="scannerVisual">
+                    <div class="camera-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="scanner-line"></div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-light btn-lg w-100 mb-3" id="startScanBtn">
+                            <i class="fas fa-camera me-2"></i> Start Camera Scan
+                        </button>
+                        <p class="small text-white-50">Simulates using device camera to scan questions</p>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-outline-light btn-lg w-100 mb-3" id="uploadImageBtn">
+                            <i class="fas fa-upload me-2"></i> Upload Image
+                        </button>
+                        <p class="small text-white-50">Upload an image of your question</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5 class="text-center mb-3">Or Type Your Question Manually</h5>
+                    <div class="form-group">
+                        <textarea class="form-control" id="manualQuestion" rows="4" placeholder="Type or paste your question here..."></textarea>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-scan" id="getAnswerBtn">
+                            <i class="fas fa-search me-2"></i> Get Answer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Current Selection Info -->
+            <div class="mt-3 p-3 bg-light rounded text-dark">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Standard:</strong> <span id="currentStandardDisplay">Not selected</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Subject:</strong> <span id="currentSubjectDisplay">Not selected</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question & Answer Section -->
+        <div class="row mt-4">
+            <div class="col-lg-8">
+                <!-- Question Display -->
+                <div class="question-box">
+                    <h4><i class="fas fa-question-circle me-2"></i>Your Question</h4>
+                    <div id="questionDisplay" class="mt-3 p-3 bg-light rounded">
+                        <p class="mb-0 text-muted">No question entered yet. Please scan or type a question.</p>
+                    </div>
+                </div>
+                
+                <!-- Answer Display -->
+                <div class="answer-box" id="answerBox">
+                    <h4><i class="fas fa-lightbulb me-2"></i>Answer</h4>
+                    <div class="loader" id="answerLoader">
+                        <div class="loader-spinner"></div>
+                        <p>Finding the best answer for you...</p>
+                    </div>
+                    <div id="answerContent">
+                        <!-- Answer will be displayed here -->
+                    </div>
+                    <div class="mt-3 d-flex justify-content-between">
+                        <div>
+                            <span class="badge bg-primary" id="answerLevelBadge"></span>
+                            <span class="badge bg-success ms-2" id="answerSubjectBadge"></span>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary" id="saveAnswerBtn">
+                                <i class="far fa-save me-1"></i> Save
+                            </button>
+                            <button class="btn btn-sm btn-outline-success ms-2" id="copyAnswerBtn">
+                                <i class="far fa-copy me-1"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Help Section -->
+                <div class="step-container mt-4" id="help">
+                    <h4><i class="fas fa-question-circle me-2"></i>How It Works</h4>
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="card p-3 text-center">
+                                <div class="subject-icon text-primary">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <h5>Select Standard</h5>
+                                <p class="small">Choose your class from Std 1 to 12 or college level</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card p-3 text-center">
+                                <div class="subject-icon text-success">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <h5>Choose Subject</h5>
+                                <p class="small">Select the subject related to your question</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card p-3 text-center">
+                                <div class="subject-icon text-warning">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                                <h5>Scan Question</h5>
+                                <p class="small">Use camera, upload image, or type question manually</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- History Section -->
+                <div class="step-container" id="history">
+                    <h4><i class="fas fa-history me-2"></i>Recent Scans</h4>
+                    <div class="mt-3" id="historyList">
+                        <!-- History items will be loaded here -->
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-history fa-2x mb-3"></i>
+                            <p>No scan history yet</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subject Info -->
+                <div class="step-container mt-4">
+                    <h4><i class="fas fa-info-circle me-2"></i>Current Selection</h4>
+                    <div class="mt-3">
+                        <div class="p-3 bg-light rounded mb-3">
+                            <p class="mb-1"><strong>Standard:</strong> <span id="sidebarStandard">Not selected</span></p>
+                            <p class="mb-0"><strong>Subject:</strong> <span id="sidebarSubject">Not selected</span></p>
+                        </div>
+                        <div class="p-3 bg-light rounded">
+                            <h6>Available Subjects:</h6>
+                            <div id="sidebarSubjects">
+                                <p class="text-muted small">Select a standard to see subjects</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>EduSmart Scanner</h5>
+                    <p class="mt-3">An intelligent educational tool for students from Std 1 to college level. Get instant answers to your questions.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50">Home</a></li>
+                        <li><a href="#history" class="text-white-50">History</a></li>
+                        <li><a href="#help" class="text-white-50">Help</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Education Levels</h5>
+                    <ul class="list-unstyled">
+                        <li><span class="text-white-50">Std 1-12</span></li>
+                        <li><span class="text-white-50">BA</span></li>
+                        <li><span class="text-white-50">BCOM</span></li>
+                        <li><span class="text-white-50">MCOM</span></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-white-50">
+            <div class="text-center">
+                <p class="mb-0">© 2023 EduSmart Scanner. This is a demonstration app for educational purposes.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enhanced Question Database with more comprehensive answers
+        const questionDatabase = {
+            "std-1": {
+                "Mathematics": [
+                    { question: "What is 5 + 3?", answer: "5 + 3 = 8" },
+                    { question: "How much is 10 minus 4?", answer: "10 - 4 = 6" },
+                    { question: "What comes after number 7?", answer: "After 7 comes 8" },
+                    { question: "How many sides does a triangle have?", answer: "A triangle has 3 sides" }
+                ],
+                "English": [
+                    { question: "What is the opposite of 'hot'?", answer: "The opposite of 'hot' is 'cold'" },
+                    { question: "How do you spell 'cat'?", answer: "C-A-T spells cat" },
+                    { question: "What is a vowel?", answer: "Vowels are the letters A, E, I, O, U" }
+                ],
+                "Science": [
+                    { question: "What do plants need to grow?", answer: "Plants need sunlight, water, and soil to grow" },
+                    { question: "How many legs does a dog have?", answer: "A dog has 4 legs" }
+                ]
+            },
+            "std-2": {
+                "Mathematics": [
+                    { question: "What is 15 + 7?", answer: "15 + 7 = 22" },
+                    { question: "How many days are in a week?", answer: "There are 7 days in a week" }
+                ],
+                "English": [
+                    { question: "What is a noun?", answer: "A noun is a word that names a person, place, thing, or idea" }
+                ]
+            },
+            // More standards with subjects...
+            "std-10": {
+                "Mathematics": [
+                    { question: "What is the quadratic formula?", answer: "The quadratic formula is x = [-b ± √(b² - 4ac)] / 2a, used to solve equations of the form ax² + bx + c = 0" },
+                    { question: "What is Pythagoras theorem?", answer: "Pythagoras theorem states that in a right triangle, the square of the hypotenuse equals the sum of squares of the other two sides: a² + b² = c²" }
+                ],
+                "Science": [
+                    { question: "What is Newton's first law of motion?", answer: "Newton's first law states that an object at rest stays at rest, and an object in motion stays in motion unless acted upon by an external force." },
+                    { question: "What is photosynthesis?", answer: "Photosynthesis is the process by which plants convert sunlight, carbon dioxide, and water into glucose and oxygen." }
+                ]
+            },
+            "ba": {
+                "Economics": [
+                    { question: "What is microeconomics?", answer: "Microeconomics studies the behavior of individuals and firms in making decisions regarding the allocation of scarce resources." },
+                    { question: "What is GDP?", answer: "GDP (Gross Domestic Product) is the total monetary value of all finished goods and services produced within a country's borders in a specific time period." }
+                ],
+                "History": [
+                    { question: "What caused World War I?", answer: "World War I was caused by militarism, alliances, imperialism, and nationalism, with the assassination of Archduke Franz Ferdinand as the immediate trigger." }
+                ]
+            },
+            "bcom": {
+                "Accounting": [
+                    { question: "What is the accounting equation?", answer: "The accounting equation is Assets = Liabilities + Equity" },
+                    { question: "What is debit and credit?", answer: "In accounting, debit refers to an entry on the left side, and credit refers to an entry on the right side of an account." }
+                ],
+                "Business Studies": [
+                    { question: "What is SWOT analysis?", answer: "SWOT analysis is a strategic planning technique used to identify Strengths, Weaknesses, Opportunities, and Threats related to business competition or project planning." }
+                ]
+            },
+            "mcom": {
+                "Finance": [
+                    { question: "What is capital budgeting?", answer: "Capital budgeting is the process that companies use for decision-making on long-term investments whose returns extend beyond one year." },
+                    { question: "What is working capital?", answer: "Working capital is the difference between a company's current assets and current liabilities, representing operating liquidity." }
+                ],
+                "Marketing": [
+                    { question: "What is the marketing mix?", answer: "The marketing mix refers to the set of actions or tactics that a company uses to promote its brand or product, often summarized as the 4 Ps: Product, Price, Place, Promotion." }
+                ]
+            }
+        };
+
+        // Subject mapping for each standard
+        const subjectMapping = {
+            "std-1": ["Mathematics", "English", "Science", "Social Studies", "Drawing"],
+            "std-2": ["Mathematics", "English", "Science", "Social Studies", "Moral Science"],
+            "std-3": ["Mathematics", "English", "Science", "Social Studies", "Hindi"],
+            "std-4": ["Mathematics", "English", "Science", "Social Studies", "Hindi", "Computer"],
+            "std-5": ["Mathematics", "English", "Science", "Social Studies", "Hindi", "Sanskrit"],
+            "std-6": ["Mathematics", "English", "Science", "Social Studies", "Hindi", "Sanskrit", "Computer"],
+            "std-7": ["Mathematics", "English", "Science", "Social Studies", "Hindi", "Sanskrit", "Computer"],
+            "std-8": ["Mathematics", "English", "Science", "Social Studies", "Hindi", "Sanskrit", "Computer"],
+            "std-9": ["Mathematics", "English", "Science", "Social Studies", "Hindi", "Computer", "Economics"],
+            "std-10": ["Mathematics", "English", "Science", "Social Studies", "Hindi", "Computer", "Economics"],
+            "std-11": ["Physics", "Chemistry", "Mathematics", "Biology", "Computer Science", "Economics", "Business Studies"],
+            "std-12": ["Physics", "Chemistry", "Mathematics", "Biology", "Computer Science", "Economics", "Accountancy"],
+            "ba": ["Economics", "History", "Political Science", "Sociology", "English Literature", "Psychology"],
+            "bcom": ["Accountancy", "Business Studies", "Economics", "Mathematics", "Computer Applications", "Business Law"],
+            "mcom": ["Financial Management", "Marketing Management", "Human Resource Management", "Business Research", "International Business"]
+        };
+
+        // Icons for subjects
+        const subjectIcons = {
+            "Mathematics": "fas fa-calculator",
+            "English": "fas fa-book",
+            "Science": "fas fa-flask",
+            "Social Studies": "fas fa-globe",
+            "Hindi": "fas fa-language",
+            "Computer": "fas fa-laptop-code",
+            "Sanskrit": "fas fa-language",
+            "Physics": "fas fa-atom",
+            "Chemistry": "fas fa-vial",
+            "Biology": "fas fa-dna",
+            "Economics": "fas fa-chart-line",
+            "Business Studies": "fas fa-briefcase",
+            "Accountancy": "fas fa-file-invoice-dollar",
+            "History": "fas fa-landmark",
+            "Political Science": "fas fa-university",
+            "Sociology": "fas fa-users",
+            "English Literature": "fas fa-book-open",
+            "Psychology": "fas fa-brain",
+            "Financial Management": "fas fa-money-bill-wave",
+            "Marketing Management": "fas fa-bullhorn",
+            "Human Resource Management": "fas fa-user-tie",
+            "Business Research": "fas fa-search",
+            "International Business": "fas fa-plane",
+            "Drawing": "fas fa-palette",
+            "Moral Science": "fas fa-heart",
+            "Computer Science": "fas fa-code",
+            "Business Law": "fas fa-gavel",
+            "Computer Applications": "fas fa-desktop"
+        };
+
+        // App State
+        let currentStandard = null;
+        let currentSubject = null;
+        let currentQuestion = "";
+        let currentAnswer = "";
+        let scanHistory = JSON.parse(localStorage.getItem('eduScanHistory')) || [];
+
+        // DOM Elements
+        const progressBar = document.getElementById('progressBar');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        
+        const selectedStandardInfo = document.getElementById('selectedStandardInfo');
+        const selectedStandardText = document.getElementById('selectedStandardText');
+        const nextToSubjectsBtn = document.getElementById('nextToSubjects');
+        
+        const subjectsContainer = document.getElementById('subjectsContainer');
+        const selectedSubjectInfo = document.getElementById('selectedSubjectInfo');
+        const selectedSubjectText = document.getElementById('selectedSubjectText');
+        const nextToScannerBtn = document.getElementById('nextToScanner');
+        
+        const currentStandardDisplay = document.getElementById('currentStandardDisplay');
+        const currentSubjectDisplay = document.getElementById('currentSubjectDisplay');
+        const sidebarStandard = document.getElementById('sidebarStandard');
+        const sidebarSubject = document.getElementById('sidebarSubject');
+        const sidebarSubjects = document.getElementById('sidebarSubjects');
+        
+        const questionDisplay = document.getElementById('questionDisplay');
+        const answerBox = document.getElementById('answerBox');
+        const answerLoader = document.getElementById('answerLoader');
+        const answerContent = document.getElementById('answerContent');
+        const answerLevelBadge = document.getElementById('answerLevelBadge');
+        const answerSubjectBadge = document.getElementById('answerSubjectBadge');
+        
+        const manualQuestion = document.getElementById('manualQuestion');
+        const getAnswerBtn = document.getElementById('getAnswerBtn');
+        const saveAnswerBtn = document.getElementById('saveAnswerBtn');
+        const copyAnswerBtn = document.getElementById('copyAnswerBtn');
+        
+        const historyList = document.getElementById('historyList');
+        
+        // Standard selection
+        document.querySelectorAll('[data-level]').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                document.querySelectorAll('[data-level]').forEach(c => {
+                    c.classList.remove('active');
+                });
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Set current standard
+                currentStandard = this.getAttribute('data-level');
+                
+                // Update UI
+                const standardName = this.querySelector('h4').textContent;
+                selectedStandardText.textContent = standardName;
+                selectedStandardInfo.style.display = 'block';
+                
+                // Update sidebar
+                sidebarStandard.textContent = standardName;
+                updateSidebarSubjects(currentStandard);
+                
+                // Update progress
+                progressBar.style.width = '25%';
+            });
+        });
+        
+        // Next to subjects button
+        nextToSubjectsBtn.addEventListener('click', function() {
+            if (!currentStandard) {
+                alert("Please select a standard first");
+                return;
+            }
+            
+            // Show step 2, hide step 1
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            step3.style.display = 'none';
+            
+            // Load subjects for the selected standard
+            loadSubjects(currentStandard);
+            
+            // Update progress
+            progressBar.style.width = '50%';
+        });
+        
+        // Back to standards button
+        document.getElementById('backToStandards').addEventListener('click', function() {
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+            step3.style.display = 'none';
+            
+            // Update progress
+            progressBar.style.width = '25%';
+        });
+        
+        // Load subjects for a standard
+        function loadSubjects(standard) {
+            subjectsContainer.innerHTML = '';
+            
+            const subjects = subjectMapping[standard] || [];
+            
+            if (subjects.length === 0) {
+                subjectsContainer.innerHTML = '<div class="col-12"><p class="text-center text-muted">No subjects available for this standard.</p></div>';
+                return;
+            }
+            
+            subjects.forEach(subject => {
+                const col = document.createElement('div');
+                col.className = 'col-6 col-md-4 col-lg-3 mb-3';
+                col.innerHTML = `
+                    <div class="card subject-card" data-subject="${subject}">
+                        <div class="subject-icon text-primary">
+                            <i class="${subjectIcons[subject] || 'fas fa-book'}"></i>
+                        </div>
+                        <h6 class="mb-0">${subject}</h6>
+                    </div>
+                `;
+                
+                col.querySelector('.card').addEventListener('click', function() {
+                    // Remove active class from all subject cards
+                    document.querySelectorAll('.subject-card').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                    
+                    // Set current subject
+                    currentSubject = subject;
+                    
+                    // Update UI
+                    selectedSubjectText.textContent = subject;
+                    selectedSubjectInfo.style.display = 'block';
+                    
+                    // Update sidebar and scanner display
+                    sidebarSubject.textContent = subject;
+                    currentSubjectDisplay.textContent = subject;
+                });
+                
+                subjectsContainer.appendChild(col);
+            });
+        }
+        
+        // Next to scanner button
+        nextToScannerBtn.addEventListener('click', function() {
+            if (!currentSubject) {
+                alert("Please select a subject first");
+                return;
+            }
+            
+            // Show step 3, hide step 2
+            step1.style.display = 'none';
+            step2.style.display = 'none';
+            step3.style.display = 'block';
+            
+            // Update progress
+            progressBar.style.width = '75%';
+            
+            // Update current selection displays
+            const standardCard = document.querySelector(`[data-level="${currentStandard}"] h4`);
+            currentStandardDisplay.textContent = standardCard ? standardCard.textContent : currentStandard;
+            currentSubjectDisplay.textContent = currentSubject;
+        });
+        
+        // Back to subjects button
+        document.getElementById('backToSubjects').addEventListener('click', function() {
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            step3.style.display = 'none';
+            
+            // Update progress
+            progressBar.style.width = '50%';
+        });
+        
+        // Update sidebar subjects
+        function updateSidebarSubjects(standard) {
+            const subjects = subjectMapping[standard] || [];
+            sidebarSubjects.innerHTML = '';
+            
+            if (subjects.length === 0) {
+                sidebarSubjects.innerHTML = '<p class="text-muted small">No subjects available</p>';
+                return;
+            }
+            
+            subjects.forEach(subject => {
+                const badge = document.createElement('span');
+                badge.className = 'subject-badge';
+                badge.textContent = subject;
+                sidebarSubjects.appendChild(badge);
+            });
+        }
+        
+        // Get answer button
+        getAnswerBtn.addEventListener('click', function() {
+            currentQuestion = manualQuestion.value.trim();
+            
+            if (!currentQuestion) {
+                alert("Please enter a question");
+                return;
+            }
+            
+            if (!currentStandard || !currentSubject) {
+                alert("Please select a standard and subject first");
+                return;
+            }
+            
+            // Display question
+            questionDisplay.innerHTML = `<p class="mb-0">${currentQuestion}</p>`;
+            
+            // Show answer box with loader
+            answerBox.style.display = 'block';
+            answerLoader.style.display = 'block';
+            answerContent.innerHTML = '';
+            
+            // Simulate API call to get answer
+            setTimeout(() => {
+                findAnswer(currentQuestion, currentStandard, currentSubject);
+            }, 1500);
+        });
+        
+        // Start scan button
+        document.getElementById('startScanBtn').addEventListener('click', function() {
+            if (!currentStandard || !currentSubject) {
+                alert("Please select a standard and subject first");
+                return;
+            }
+            
+            // Simulate camera scanning
+            alert("Camera scanning simulation. In a real app, this would open your camera to scan a question.");
+            
+            // Simulate scanning and getting a random question
+            const questions = questionDatabase[currentStandard]?.[currentSubject] || [];
+            if (questions.length > 0) {
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                manualQuestion.value = randomQuestion.question;
+                
+                // Show a message
+                const scannerVisual = document.getElementById('scannerVisual');
+                scannerVisual.innerHTML = `
+                    <div class="camera-icon text-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h5 class="text-white mt-3">Question scanned successfully!</h5>
+                `;
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    scannerVisual.innerHTML = `
+                        <div class="camera-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="scanner-line"></div>
+                    `;
+                }, 2000);
+            }
+        });
+        
+        // Upload image button
+        document.getElementById('uploadImageBtn').addEventListener('click', function() {
+            if (!currentStandard || !currentSubject) {
+                alert("Please select a standard and subject first");
+                return;
+            }
+            
+            // Simulate file upload
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                // Simulate image processing
+                alert("Image uploaded. In a real app, this would use OCR to extract text from the image.");
+                
+                // Simulate getting a random question
+                const questions = questionDatabase[currentStandard]?.[currentSubject] || [];
+                if (questions.length > 0) {
+                    const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                    manualQuestion.value = randomQuestion.question;
+                }
+            };
+            input.click();
+        });
+        
+        // Find answer function
+        function findAnswer(question, standard, subject) {
+            // Check if answer exists in database
+            let foundAnswer = null;
+            
+            if (questionDatabase[standard] && questionDatabase[standard][subject]) {
+                const questions = questionDatabase[standard][subject];
+                
+                // Try to find exact match
+                foundAnswer = questions.find(q => 
+                    q.question.toLowerCase() === question.toLowerCase()
+                );
+                
+                // If not found, try partial match
+                if (!foundAnswer) {
+                    foundAnswer = questions.find(q => 
+                        question.toLowerCase().includes(q.question.toLowerCase().substring(0, 10)) ||
+                        q.question.toLowerCase().includes(question.toLowerCase().substring(0, 10))
+                    );
+                }
+            }
+            
+            // Hide loader
+            answerLoader.style.display = 'none';
+            
+            // Display answer
+            if (foundAnswer) {
+                currentAnswer = foundAnswer.answer;
+                answerContent.innerHTML = `<p>${foundAnswer.answer}</p>`;
+            } else {
+                // Generate a generic answer based on subject
+                currentAnswer = generateGenericAnswer(question, standard, subject);
+                answerContent.innerHTML = `
+                    <p>${currentAnswer}</p>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>This is a generated answer. For more specific answers, ensure your question includes key terms related to ${subject}.</small>
+                    </div>
+                `;
+            }
+            
+            // Update badges
+            const standardName = document.querySelector(`[data-level="${standard}"] h4`).textContent;
+            answerLevelBadge.textContent = standardName;
+            answerSubjectBadge.textContent = subject;
+            
+            // Update progress
+            progressBar.style.width = '100%';
+            
+            // Save to history
+            saveToHistory(question, currentAnswer, standard, subject);
+        }
+        
+        // Generate generic answer
+        function generateGenericAnswer(question, standard, subject) {
+            const templates = [
+                `Based on ${standard} ${subject} curriculum: ${question} relates to fundamental concepts in ${subject}. The answer would depend on specific context provided in your textbook.`,
+                `In ${subject} for ${standard}, questions like "${question}" typically relate to core principles taught at this level. Refer to your course materials for the precise answer.`,
+                `This ${subject} question for ${standard} level addresses important concepts. The exact answer can be found in your textbook chapter covering this topic.`
+            ];
+            
+            return templates[Math.floor(Math.random() * templates.length)];
+        }
+        
+        // Save to history
+        function saveToHistory(question, answer, standard, subject) {
+            const historyItem = {
+                id: Date.now(),
+                question: question,
+                answer: answer,
+                standard: standard,
+                standardName: document.querySelector(`[data-level="${standard}"] h4`).textContent,
+                subject: subject,
+                date: new Date().toLocaleString()
+            };
+            
+            // Add to history array
+            scanHistory.unshift(historyItem);
+            
+            // Keep only last 10 items
+            if (scanHistory.length > 10) {
+                scanHistory = scanHistory.slice(0, 10);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('eduScanHistory', JSON.stringify(scanHistory));
+            
+            // Update history display
+            updateHistoryDisplay();
+        }
+        
+        // Update history display
+        function updateHistoryDisplay() {
+            if (scanHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-history fa-2x mb-3"></i>
+                        <p>No scan history yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyList.innerHTML = '';
+            scanHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <div style="max-width: 80%;">
+                            <strong>${item.question.substring(0, 60)}${item.question.length > 60 ? '...' : ''}</strong>
+                            <div class="small text-muted mt-1">${item.standardName} • ${item.subject}</div>
+                        </div>
+                        <div class="text-muted small text-end">
+                            ${item.date.split(',')[0]}
+                        </div>
+                    </div>
+                `;
+                
+                historyItem.addEventListener('click', function() {
+                    // Fill the question and get answer
+                    manualQuestion.value = item.question;
+                    currentStandard = item.standard;
+                    currentSubject = item.subject;
+                    
+                    // Update UI
+                    const standardCard = document.querySelector(`[data-level="${currentStandard}"]`);
+                    if (standardCard) {
+                        standardCard.click();
+                    }
+                    
+                    // Show answer
+                    questionDisplay.innerHTML = `<p class="mb-0">${item.question}</p>`;
+                    answerBox.style.display = 'block';
+                    answerLoader.style.display = 'none';
+                    answerContent.innerHTML = `<p>${item.answer}</p>`;
+                    answerLevelBadge.textContent = item.standardName;
+                    answerSubjectBadge.textContent = item.subject;
+                });
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Save answer button
+        saveAnswerBtn.addEventListener('click', function() {
+            if (!currentQuestion || !currentAnswer) {
+                alert("No answer to save");
+                return;
+            }
+            
+            // Already saved in findAnswer function, just show confirmation
+            const originalText = saveAnswerBtn.innerHTML;
+            saveAnswerBtn.innerHTML = '<i class="fas fa-check me-1"></i> Saved!';
+            saveAnswerBtn.classList.add('btn-success');
+            saveAnswerBtn.classList.remove('btn-outline-primary');
+            
+            setTimeout(() => {
+                saveAnswerBtn.innerHTML = originalText;
+                saveAnswerBtn.classList.remove('btn-success');
+                saveAnswerBtn.classList.add('btn-outline-primary');
+            }, 2000);
+        });
+        
+        // Copy answer button
+        copyAnswerBtn.addEventListener('click', function() {
+            if (!currentAnswer) {
+                alert("No answer to copy");
+                return;
+            }
+            
+            const textToCopy = `Question: ${currentQuestion}\n\nAnswer: ${currentAnswer}\n\nStandard: ${answerLevelBadge.textContent}\nSubject: ${answerSubjectBadge.textContent}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = copyAnswerBtn.innerHTML;
+                copyAnswerBtn.innerHTML = '<i class="fas fa-check me-1"></i> Copied!';
+                copyAnswerBtn.classList.add('btn-success');
+                copyAnswerBtn.classList.remove('btn-outline-success');
+                
+                setTimeout(() => {
+                    copyAnswerBtn.innerHTML = originalText;
+                    copyAnswerBtn.classList.remove('btn-success');
+                    copyAnswerBtn.classList.add('btn-outline-success');
+                }, 2000);
+            });
+        });
+        
+        // Initialize the app
+        function initApp() {
+            // Load history
+            updateHistoryDisplay();
+            
+            // Set up example questions
+            setupExampleQuestions();
+        }
+        
+        // Set up example questions for each standard
+        function setupExampleQuestions() {
+            // Add some example questions to the database if not present
+            if (!questionDatabase["std-1"]) questionDatabase["std-1"] = {};
+            if (!questionDatabase["std-1"]["Mathematics"]) {
+                questionDatabase["std-1"]["Mathematics"] = [
+                    { question: "What is 5 + 3?", answer: "5 + 3 = 8" },
+                    { question: "How much is 10 minus 4?", answer: "10 - 4 = 6" }
+                ];
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Backend Integration Simulation
+        // In a real app, you would replace this with actual API calls to PHP/Python backend
+        
+        // PHP Backend Example (commented out for reference):
+        /*
+        // In PHP (save as api.php):
+        <?php
+        header('Content-Type: application/json');
+        
+        $action = $_GET['action'] ?? '';
+        
+        if ($action === 'get_answer') {
+            $question = $_POST['question'] ?? '';
+            $standard = $_POST['standard'] ?? '';
+            $subject = $_POST['subject'] ?? '';
+            
+            // Connect to database and fetch answer
+            // $answer = fetchFromDatabase($question, $standard, $subject);
+            
+            // For simulation
+            $answer = "This would be the answer from PHP backend for: $question";
+            
+            echo json_encode(['success' => true, 'answer' => $answer]);
+        }
+        ?>
+        
+        // JavaScript call to PHP backend:
+        async function getAnswerFromPHP(question, standard, subject) {
+            const formData = new FormData();
+            formData.append('question', question);
+            formData.append('standard', standard);
+            formData.append('subject', subject);
+            
+            try {
+                const response = await fetch('api.php?action=get_answer', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                return data.answer;
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+        }
+        */
+        
+        // Python Backend Example (Flask):
+        /*
+        # save as app.py
+        from flask import Flask, request, jsonify
+        from flask_cors import CORS
+        
+        app = Flask(__name__)
+        CORS(app)
+        
+        @app.route('/get_answer', methods=['POST'])
+        def get_answer():
+            data = request.json
+            question = data.get('question', '')
+            standard = data.get('standard', '')
+            subject = data.get('subject', '')
+            
+            # Query your database or AI model here
+            answer = f"Python backend answer for: {question}"
+            
+            return jsonify({'success': True, 'answer': answer})
+        
+        if __name__ == '__main__':
+            app.run(debug=True)
+        
+        // JavaScript call to Python backend:
+        async function getAnswerFromPython(question, standard, subject) {
+            try {
+                const response = await fetch('http://localhost:5000/get_answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question, standard, subject })
+                });
+                
+                const data = await response.json();
+                return data.answer;
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+        }
+        */
+    </script>
+</body>
+</html>
